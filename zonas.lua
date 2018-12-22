@@ -160,6 +160,9 @@ revom.zonas.ocupar = function(x, z, tipo, pos, name)
 	
 	-- Expandir limite de zonas ocupadas
 	revom.zonas.expande_aptas(x, z)
+	
+	-- Atualiza waypoints de jogadores proximos
+	revom.atualizar_waypoints_zona(x, z)
 end
 
 -- Desocupar zona
@@ -168,7 +171,6 @@ revom.zonas.desocupar = function(x, z, tipo, pos, name)
 	if revom.bd.verif("zonas_ocupadas", x.." "..z) == true then
 		dados = revom.bd.pegar("zonas_ocupadas", x.." "..z)
 	end
-	
 	-- Novos dados
 	if tipo then
 		if dados[tipo] == nil then dados[tipo] = {} end
@@ -180,12 +182,15 @@ revom.zonas.desocupar = function(x, z, tipo, pos, name)
 	end
 	
 	revom.bd.salvar("zonas_ocupadas", x.." "..z, dados)
+	
+	-- Atualiza waypoints de jogadores proximos
+	revom.atualizar_waypoints_zona(x, z)
 end
 
 -- Pegar zona apta para spawn
 -- Retorna x, z
 revom.zonas.get_spawn = function()
-
+	
 	for i=0, 20, 1 do
 		local tb = zonas_livres[tostring(i)]
 		if table.maxn(tb) > 0 then
@@ -196,6 +201,9 @@ revom.zonas.get_spawn = function()
 			return malha[1], malha[2]
 		end
 	end
+	
+	-- Nenhuma malha encontrada
+	minetest.log("error", "Nenhuma zona apta para spawn encontrada, retornando zona 0,0")
 end
 
 

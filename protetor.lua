@@ -9,6 +9,9 @@
 	Demarcador de casas
   ]]
 
+-- Tradutor de texto
+local S = revom.S
+
 -- Verificar e remover demarcadores invalidos
 local check_demarcador = function(pos)
 	local meta = minetest.get_meta(pos)
@@ -91,17 +94,17 @@ end
 
 -- Demarcador de territorio
 minetest.register_node("revom:demarcador_casa", {
-	description = "Demarcador de Casa",
+	description = S("Demarcador de Casa"),
 	tiles = {
-		"default_steel_block.png", 
-		"default_steel_block.png", 
-		"default_steel_block.png", 
-		"default_steel_block.png", 
-		"default_steel_block.png", 
-		"default_steel_block.png", 
+		"revom_marcador_lados.png", 
+		"revom_marcador_lados.png", 
+		"revom_marcador_frente.png", 
+		"revom_marcador_frente.png", 
+		"revom_marcador_frente.png", 
+		"revom_marcador_frente.png", 
 	},
-	groups = {choppy = 2, oddly_breakable_by_hand = 2},
-	sounds = default.node_sound_wood_defaults(),
+	groups = {cracky = 1, level = 2},
+	sounds = default.node_sound_metal_defaults(),
 	walkable = true,
 	paramtype = "light",
 	selection_box = {
@@ -111,6 +114,12 @@ minetest.register_node("revom:demarcador_casa", {
 	
 	on_place = function(itemstack, placer, pointed_thing)
 		local name = placer:get_player_name()
+		
+		-- Verifica nivel do jogador
+		if xpro and xpro.get_player_lvl(name) < revom.level_to_house then
+			minetest.chat_send_player(name, S("Precisa atingir nivel @1", revom.level_to_house))
+			return itemstack 
+		end
 		
 		-- Verifica pos
 		if pointed_thing == nil or pointed_thing.above == nil then
@@ -123,7 +132,7 @@ minetest.register_node("revom:demarcador_casa", {
 			for y=-1, 1 do
 				for z=-1, 1 do
 					if minetest.is_protected({x=pos.x+(5*x), y=pos.y+(5*x), z=pos.z+(5*x)}, name) == true then
-						minetest.chat_send_player(name, "Area protegida nas proximidades")
+						minetest.chat_send_player(name, S("Area protegida nas proximidades"))
 						return itemstack 
 					end
 				end
@@ -152,11 +161,12 @@ minetest.register_node("revom:demarcador_casa", {
 		-- Define novo demarcador
 		revom.bd.salvar("casas", name, {pos=pos})
 		local meta = minetest.get_meta(pos)
-		meta:set_string("infotext", "Casa de "..name)
+		meta:set_string("infotext", S("Casa de @1", name))
 		meta:set_string("dono", name)
+		
 		-- Nova ocupação
 		local x, z = revom.zonas.get_malha(pos)
-		revom.zonas.desocupar(x, z, "casa", pos, name)
+		revom.zonas.ocupar(x, z, "casa", pos, name)
 		
 		-- Verfica no que está na posição anterior
 		if oldpos then
@@ -188,16 +198,30 @@ minetest.register_node("revom:demarcador_casa", {
 		local meta = minetest.get_meta(pos)
 		local dono = meta:get_string("dono")
 		
-		revom.bd.remover("casas", dono)
+		-- Pega coordenada do banco de dados
+		local bdpos = nil
+		if revom.bd.verif("casas", dono) == true then
+			bdpos = revom.bd.pegar("casas", dono).pos
+		end
+		
+		-- Verifica se é o node atual do dono
+		if bdpos and bdpos.x == pos.x and bdpos.y == pos.y and bdpos.z == pos.z then 
+					
+			revom.bd.remover("casas", dono)
+			
+			-- Remove ocupação antiga (caso todos os dados sejam validos inclusive nome)
+			local bdx, bdz = revom.zonas.get_malha(bdpos)
+			revom.zonas.desocupar(bdx, bdz, "casa", bdpos, dono)
+		end
 	end,
 })
 -- Receita 
 minetest.register_craft({
 	output = 'revom:demarcador_casa',
 	recipe = {
-		{'group:stick', 'default:bronze_ingot', 'group:stick'},
-		{'default:bronze_ingot', 'default:steelblock', 'default:bronze_ingot'},
-		{'group:stick', 'default:bronze_ingot', 'group:stick'},
+		{'default:coal_lump', 'default:steel_ingot', 'default:coal_lump'},
+		{'default:steel_ingot', 'default:steel_ingot', 'default:steel_ingot'},
+		{'default:coal_lump', 'default:steel_ingot', 'default:coal_lump'},
 	}
 })
 
@@ -216,12 +240,13 @@ local new_is_protected = function(pos, name)
 	if name == "" or name == nil then return nil end
 	
 	-- Node demarcador dentro da area de risco (não deve existir mais de 1)
-	local n = minetest.find_node_near(pos, 5, "revom:demarcador_casa")
-	if n then
+	if minetest.find_node_near(pos, 5, "revom:demarcador_casa") then
 	
 		local meta = minetest.get_meta(pos)
 		if meta:get_string("dono") == name then
 			return false
+		else
+			return true
 		end
 	else
 		return nil -- Indefinido, repassa para o proximo mod verificar

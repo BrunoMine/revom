@@ -1,0 +1,38 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-12-22 14:20-0200\n"
+"PO-Revision-Date: 2018-12-22 14:18-0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: protetor.lua
+msgid "Demarcador de Casa"
+msgstr "House Stone"
+
+#: protetor.lua
+msgid "Precisa atingir nivel @1"
+msgstr "Need be level @1"
+
+#: protetor.lua
+msgid "Area protegida nas proximidades"
+msgstr "Protected area"
+
+#: protetor.lua waypoints.lua
+msgid "Casa de @1"
+msgstr "@1's House"
+
+#~ msgid "Jogador @1 demarcou uma casa em @2"
+#~ msgstr "Player @1 marked a house at @2"

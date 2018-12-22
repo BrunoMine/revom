@@ -1,0 +1,24 @@
+# Configurações aplicaveis para o menu gráfico
+
+# Largura das zonas de spawn
+# CUIDADO! Alterar isso após o inicio do mundo pode causar problemas
+#
+# Width of spawn zones
+# CAUTION! Changing this after the start of the world can cause problems
+revom_zone_width (Largura de zona | Zone Width) int 200 20
+
+# Numero de spawn realizados numa zona livre
+# Number of spawn performed in a free zone
+revom_spawns_per_zone (Spawns por zona | Spawns per zone) int 10 1 20
+
+# Nivel minimo para um jogador demarcar uma casa (precisa do mod xpro)
+# Minimum level for a player to mark a house (need xpro mod)
+revom_level_to_house (Nivel para criar casa | Level to House) int 3 1
+
+# Tempo entre cada vez que os demarcadores (waypoints) do mapa são atualizados
+# Time between each time map waypoints are updated
+revom_waypoints_update_time (Tempo para atualizar demarcadores | waypoints_update_time) int 60 1
+
+
+
+

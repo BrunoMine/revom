@@ -1,0 +1,1 @@
+protetor.lua spawn.lua waypoints.lua zonas.lua
