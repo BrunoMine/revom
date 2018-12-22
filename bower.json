@@ -1,0 +1,15 @@
+{
+    "name": "revom",
+    "description": "Organizador de casas e spawn no mundo\n",
+    "keywords": [
+        "revom"
+    ],
+    "homepage": "https://github.com/BrunoMine/revom",
+    "forum": "https://forum.minetest.net/viewtopic.php?t=1",
+    "screenshots": [
+        "https://example.com/screenshot1.png"
+    ],
+    "authors": [
+        "BrunoMine"
+    ]
+}
