@@ -187,17 +187,28 @@ revom.zonas.desocupar = function(x, z, tipo, pos, name)
 	revom.atualizar_waypoints_zona(x, z)
 end
 
+-- Verificador de zona razoavel para spawn
+revom.verificar_zona_razoavel = function(pos)	
+	if minetest.find_node_near(pos, 5, {"group:water"}) then
+		local x, z = revom.zonas.get_malha(pos)
+		revom.zonas.ocupar(x, z)
+	end
+end
+
 -- Pegar zona apta para spawn
+-- <count> para contabilizar spawn na zona retornada
 -- Retorna x, z
-revom.zonas.get_spawn = function()
+revom.zonas.get_spawn = function(count)
 	
 	for i=0, 20, 1 do
 		local tb = zonas_livres[tostring(i)]
 		if table.maxn(tb) > 0 then
 			-- Sorteia uma zona
 			local malha = tb[math.random(1, table.maxn(tb))]
+			if count == true then
+				revom.zonas.apta_usada(malha[1], malha[2], i)
+			end
 			
-			revom.zonas.apta_usada(malha[1], malha[2], i)
 			return malha[1], malha[2]
 		end
 	end
