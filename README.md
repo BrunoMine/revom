@@ -7,22 +7,7 @@
 
 ## Descrição
 Modo de jogo que espalha os jogadores de forma homogenea pelo mundo
-Nome deriva de REVOção de Mundo pois pretende revolucionar a experiencia multiplayer em minetest
-
-## Requisitos _(Requirements)_
-
-## Configurações avançadas
-É possivel reconfigurar o loot de itens padrão adicionando a seguinte linha em `minetest.conf`
-```conf
-revom_set_item_loot_<itemstring trocando o ':' por '_'> = <raridade 0.000 a 1.000> <preciosidade 1 a 10> <intervalo de quantidades> <intervalo de desgaste para ferramentas>
-# Exemplos
-# Cuidado com os espaços e os traços para intervalos (min-max)
-# use disable para desativar o loot do item
-# Escreva nil nos trechos que não vai usar
-revom_set_item_loot_farming_bread = 1.000 4 98-99 nil
-revom_set_item_loot_3d_armor_helmet_wood = 0.001 1 nil 1000-65000
-revom_set_item_loot_3d_armor_helmet_diamond = disable
-```
+Nome deriva de REVOlução de Mundo pois pretende revolucionar a experiencia multiplayer em minetest
 
 ## Licença
 Veja LICENSE.txt para informações detalhadas da licença LGPL 3.0
