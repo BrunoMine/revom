@@ -48,8 +48,26 @@ minetest.register_entity("revom:display_casa", {
 	end,
 })
 
+local spawn_particula = function(pos, time)
+	minetest.add_particlespawner({
+		amount = 3*time,
+		time = time,
+		minpos = {x=pos.x-0.45, y=pos.y+0.65, z=pos.z-0.45},
+		maxpos = {x=pos.x+0.45, y=pos.y+0.65, z=pos.z+0.45},
+		minvel = {x = 0, y = 0.3, z = 0},
+		maxvel = {x = 0, y = 0.6, z = 0},
+		minacc = vector.new(),
+		maxacc = vector.new(),
+		minexptime = 1.5,
+		maxexptime = 2.5,
+		minsize = 0.7,
+		maxsize = 1.8,
+		texture = "revom_bolha_spawn.png",
+	})
+end
+
 -- Colocação de uma caixa
-display_territorio = function(pos, dist, name)
+local display_territorio = function(pos, dist, name)
 	
 	-- Remove caixas proximas para evitar colisão
 	for  _,obj in ipairs(minetest.get_objects_inside_radius(pos, 13)) do
@@ -96,7 +114,7 @@ end
 minetest.register_node("revom:demarcador_casa", {
 	description = S("Demarcador de Casa"),
 	tiles = {
-		"revom_marcador_lados.png", 
+		"revom_marcador_cima.png", 
 		"revom_marcador_lados.png", 
 		"revom_marcador_frente.png", 
 		"revom_marcador_frente.png", 
@@ -157,7 +175,7 @@ minetest.register_node("revom:demarcador_casa", {
 		
 		-- Remove item do inventario
 		itemstack:take_item()
-
+		
 		return itemstack
 	end,
 	
@@ -188,6 +206,9 @@ minetest.register_node("revom:demarcador_casa", {
 			local oldx, oldz = revom.zonas.get_malha(oldpos)
 			revom.zonas.desocupar(oldx, oldz, "casa", oldpos, name)
 		end
+		
+		-- Particulas iniciais
+		spawn_particula(pos, 3)
 		
 	end,
 	
@@ -252,9 +273,9 @@ local new_is_protected = function(pos, name)
 	if name == "" or name == nil then return nil end
 	
 	-- Node demarcador dentro da area de risco (não deve existir mais de 1)
-	if minetest.find_node_near(pos, 5, "revom:demarcador_casa") then
-	
-		local meta = minetest.get_meta(pos)
+	local p = minetest.find_node_near(pos, 5, "revom:demarcador_casa")
+	if p then
+		local meta = minetest.get_meta(p)
 		if meta:get_string("dono") == name then
 			return false
 		else
@@ -274,4 +295,32 @@ function minetest.is_protected(pos, name)
 	end
 	return old_is_protected(pos, name)
 end
+
+-- Impede levar dano em cima na propria casa
+minetest.register_on_player_hpchange(function(player, hp_change) 
+	local pos = player:get_pos()
+	local p = minetest.find_node_near(pos, 2, "revom:demarcador_casa")
+	if p then
+		local meta = minetest.get_meta(p)
+		if meta:get_string("dono") == player:get_player_name() then
+			return 0
+		else
+			return hp_change
+		end
+	else
+		return hp_change -- Indefinido, repassa para o proximo mod verificar
+	end
+end,
+true)
+
+-- Spawner de particulas nos demarcadores para mostrar spawn
+minetest.register_abm{
+        label = "revom:spawn_demarcador",
+	nodenames = {"revom:demarcador_casa"},
+	interval = 10,
+	chance = 1,
+	action = function(pos)
+		spawn_particula(pos, 10)
+	end,
+}
 
