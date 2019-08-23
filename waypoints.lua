@@ -61,7 +61,7 @@ revom.atualizar_waypoints = function(player, loop)
 				local w = player:hud_add({
 					hud_elem_type = "waypoint",
 					name = S("Casa de @1", d.name),
-					number = "205",
+					number = "6711039",
 					world_pos = d.pos
 				})
 				table.insert(waypoints[name], w)
@@ -79,7 +79,7 @@ revom.atualizar_waypoints = function(player, loop)
 					local w = player:hud_add({
 						hud_elem_type = "waypoint",
 						name = S("Casa de @1", d.name),
-						number = "205",
+						number = "3355571",
 						world_pos = d.pos
 					})
 					table.insert(waypoints[name], w)
@@ -98,7 +98,7 @@ revom.atualizar_waypoints = function(player, loop)
 					local w = player:hud_add({
 						hud_elem_type = "waypoint",
 						name = S("Casa de @1", d.name),
-						number = "205",
+						number = "7318",
 						world_pos = d.pos
 					})
 					table.insert(waypoints[name], w)
