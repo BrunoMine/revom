@@ -127,7 +127,7 @@ end
 
 -- Inicia loop ao conectar
 minetest.register_on_joinplayer(function(player)
-	revom.atualizar_waypoints(player)
+	revom.atualizar_waypoints(player, true)
 end)
 
 
